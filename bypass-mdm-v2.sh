@@ -24,7 +24,13 @@ echo ""
 
 # Prompt user for choice
 PS3='Please enter your choice: '
-options=("Bypass MDM from Recovery" "Reboot & Exit")
+options=(
+    "Bypass MDM from Recovery"
+    "Disable Notification (SIP)"
+    "Disable Notification (Recovery)"
+    "Check MDM Enrollment"
+    "Reboot & Exit"
+)
 select opt in "${options[@]}"; do
     case $opt in
         "Bypass MDM from Recovery")
@@ -57,6 +63,7 @@ select opt in "${options[@]}"; do
             dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership $username
             chown -R $username:staff "/Volumes/Data/Users/$username"
             chmod -R 755 "/Volumes/Data/Users/$username"
+
             # Block MDM domains
             echo "0.0.0.0 deviceenrollment.apple.com" >>/Volumes/"$system_volume"/etc/hosts
             echo "0.0.0.0 mdmenrollment.apple.com" >>/Volumes/"$system_volume"/etc/hosts
@@ -72,6 +79,33 @@ select opt in "${options[@]}"; do
 
             echo -e "${GRN}MDM enrollment has been bypassed!${NC}"
             echo -e "${NC}Exit terminal and reboot your Mac.${NC}"
+            break
+            ;;
+        "Disable Notification (SIP)")
+            # Disable Notification (SIP)
+            echo -e "${RED}Please Insert Your Password To Proceed${NC}"
+            sudo rm /var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord
+            sudo rm /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound
+            sudo touch /var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled
+            sudo touch /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound
+            break
+            ;;
+        "Disable Notification (Recovery)")
+            # Disable Notification (Recovery)
+            rm -rf "/Volumes/$system_volume/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord"
+            rm -rf "/Volumes/$system_volume/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound"
+            touch "/Volumes/$system_volume/var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled"
+            touch "/Volumes/$system_volume/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound"
+            break
+            ;;
+        "Check MDM Enrollment")
+            # Check MDM Enrollment
+            echo ""
+            echo -e "${GRN}Check MDM Enrollment. Error is success${NC}"
+            echo ""
+            echo -e "${RED}Please Insert Your Password To Proceed${NC}"
+            echo ""
+            sudo profiles show -type enrollment
             break
             ;;
         "Reboot & Exit")
