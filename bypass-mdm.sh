@@ -67,10 +67,10 @@ select opt in "${options[@]}"; do
         "Disable Notification (SIP)")
             # Disable Notification (SIP)
             echo -e "${RED}Please Insert Your Password To Proceed${NC}"
-            sudo rm /var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord
-            sudo rm /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound
-            sudo touch /var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled
-            sudo touch /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound
+            rm /var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord
+            rm /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound
+            touch /var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled
+            touch /var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound
             break
             ;;
         "Disable Notification (Recovery)")
@@ -88,7 +88,7 @@ select opt in "${options[@]}"; do
             echo ""
             echo -e "${RED}Please Insert Your Password To Proceed${NC}"
             echo ""
-            sudo profiles show -type enrollment
+            profiles show -type enrollment
             break
             ;;
         "Reboot & Exit")
